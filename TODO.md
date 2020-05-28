@@ -1,6 +1,6 @@
 # TODO
 
-* [ ] promt for user's name 
+* [x] prompt for user's name 
     > should be remembered
 * [ ] every user can create a new channel
     > channel name must be unique
