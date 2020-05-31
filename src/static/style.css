@@ -1,0 +1,27 @@
+.column{
+    flex-direction: column;
+}
+
+.row{
+    flex-direction: row;
+}
+
+ul{
+    list-style: none;
+}
+
+#username {
+    font-size: xxx-large;
+}
+
+.background-color {
+    background-color: #851e3e;
+}
+
+.nav-fonts-0 {
+    color: #FFE4B5;
+}
+
+.nav-fonts-1 {
+    color: #FFFFF0;
+}
