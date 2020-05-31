@@ -1,3 +1,9 @@
+html,
+body {
+  height: 100%;
+  margin: 0
+}
+
 .column{
     flex-direction: column;
 }
@@ -15,7 +21,16 @@ ul{
 }
 
 .background-color {
-    background-color: #851e3e;
+    background-color: #900C3F;
+}
+
+.bg-c {
+    background-color: #660033;
+    color: #f8f9fa;
+}
+
+.bg-c-1 {
+    background-color: #003333;
 }
 
 .nav-fonts-0 {
@@ -24,4 +39,8 @@ ul{
 
 .nav-fonts-1 {
     color: #FFFFF0;
+}
+
+.full {
+    height: 100%;
 }
