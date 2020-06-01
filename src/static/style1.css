@@ -1,0 +1,46 @@
+html,
+body {
+  height: 100%;
+  margin: 0
+}
+
+.column{
+    flex-direction: column;
+}
+
+.row{
+    flex-direction: row;
+}
+
+ul{
+    list-style: none;
+}
+
+.background-color {
+    background-color: #900C3F;
+}
+
+.bg-c {
+    background-color: #660033;
+    color: #f8f9fa;
+}
+
+.bg-c-1 {
+    background-color: #003333;
+}
+
+.nav-fonts-0 {
+    color: #FFE4B5;
+}
+
+.nav-fonts-1 {
+    color: #FFFFF0;
+}
+
+.full {
+    height: 100%;
+}
+
+.full1 {
+    width: 97%;
+}

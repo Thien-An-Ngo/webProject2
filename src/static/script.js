@@ -21,5 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     };
 
+    const username = localStorage.getItem('username');
+    const userNameEle = document.querySelectorAll('.username');
+    userNameEle[0].innerHTML = username;
+    console.log(userNameEle[0]);
     
+    //.map(item => console.log('hurzel'));
 })
