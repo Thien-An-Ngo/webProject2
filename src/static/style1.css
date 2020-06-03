@@ -44,3 +44,13 @@ ul{
 .full1 {
     width: 97%;
 }
+
+.channel:hover {
+    color: #E91E63;
+    font-size: 120%;
+}
+
+.hover1:hover {
+    color: #E6E6FA;
+    font-size: 150%;
+}

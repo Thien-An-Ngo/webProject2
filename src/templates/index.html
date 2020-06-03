@@ -1,4 +1,4 @@
-  {% extends 'layout.html' %}
+{% extends 'layout.html' %}
 
 {% block head %}
     <title>index</title>
@@ -10,13 +10,13 @@
     <a class="nav-link active p-0" href="#">
       <div class="d-flex row text-light">
         <div class="col-3 p-0 pl-4">
-          <svg class="bi bi-person-circle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="margin-top: 4px;">
+          <svg class="bi bi-person-circle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="margin-top: 6px;">
               <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
               <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
               <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
           </svg>
         </div>
-        <h4 class="col-9 username"></h3>
+        <h4 class="col-9 username" style="margin-top: 3px;"></h3>
       </div>
     </a>
     <h1 class="navbar-brand text-light">Channel</h1>
@@ -26,85 +26,43 @@
 
     <div class="col-md-3 col-xl-2">
       <nav id="sidebarMenu" class="position-fixed col-md-3 col-xl-2 d-md-block background-color sidebar collapse pt-3 full mt-4">
-    <div class="sidebar-sticky pt-3">
-      <h6 class="sidebar-heading d-flex justify-content-around align-items-center mt-4 mb-1">
-        <div class="d-flex row container p-0">
-          <h4 class="mr-0 col-8 nav-fonts-0">Channels</h4>
-          <div class="d-flex align-items-center nav-fonts-0 col-4" aria-label="Add a new report">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="16"/>
-              <line x1="8" y1="12" x2="16" y2="12"/>
-            </svg>
-          </div>
+        <div class="sidebar-sticky pt-3">
+          <h6 class="sidebar-heading d-flex justify-content-around align-items-center mt-4 mb-1">
+            <div class="d-flex row container p-0">
+              <h4 class="mr-0 col-8 nav-fonts-0" style="padding-top: 7px;">Channels</h4>
+                <div class="d-flex align-items-center nav-fonts-0 col-4" aria-label="Add a new report">
+                  <a data-toggle="modal" data-target="#exampleModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle hover1">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" y1="8" x2="12" y2="16"/>
+                      <line x1="8" y1="12" x2="16" y2="12"/>
+                    </svg>
+                  </a>
+                </div>
+            </div>
+          </h6>
+          
+          <!-- Channel List -->
+          <ul class="nav flex-column mb-2 ml-3">
+            {% if channels %}
+            {% for channel in channels %}
+              <li class="nav-item selected">
+                <a class="nav-link nav-fonts-1 channel" id="{{channel.id}}" href="#" onclick="handleClickOnChannel('{{channel.id}}')">
+                  <svg class="bi bi-window" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" 
+                  xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 4px;">
+                    <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 
+                    1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
+                    <path fill-rule="evenodd" d="M15 6H1V5h14v1z"/>
+                    <path d="M3 3.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
+                  </svg>
+              {{channel.channelName}}
+                </a>
+              </li>
+            {% endfor %}
+            {% endif %}
+          </ul>
         </div>
-      </h6>
-      <ul class="nav flex-column mb-2 ml-3">
-        <li class="nav-item">
-          <a class="nav-link nav-fonts-1" href="#">
-            <svg class="bi bi-window" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" 
-            xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 4px;">
-              <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 
-              1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
-              <path fill-rule="evenodd" d="M15 6H1V5h14v1z"/>
-              <path d="M3 3.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
-            </svg>
-            Hansenberg WG1
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link nav-fonts-1" href="#">
-            <svg class="bi bi-window" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" 
-            xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 4px;">
-              <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 
-              1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
-              <path fill-rule="evenodd" d="M15 6H1V5h14v1z"/>
-              <path d="M3 3.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
-            </svg>
-            Hansenberg WG2
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link nav-fonts-1" href="#">
-            <svg class="bi bi-window" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" 
-            xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 4px;">
-              <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 
-              1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
-              <path fill-rule="evenodd" d="M15 6H1V5h14v1z"/>
-              <path d="M3 3.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
-            </svg>
-            Hansenberg WG3
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link nav-fonts-1" href="#">
-            <svg class="bi bi-window" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" 
-            xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 4px;">
-              <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 
-              1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
-              <path fill-rule="evenodd" d="M15 6H1V5h14v1z"/>
-              <path d="M3 3.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
-            </svg>
-            Hansenberg WG4
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link nav-fonts-1" href="#">
-            <svg class="bi bi-window" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" 
-            xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 4px;">
-              <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 
-              1-1V3a1 1 0 0 0-1-1zM2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/>
-              <path fill-rule="evenodd" d="M15 6H1V5h14v1z"/>
-              <path d="M3 3.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1.5 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
-            </svg>
-            <span>
-              EEEEEEEEEE
-            </span>
-          </a>
-        </li>
-      </ul>
-    </div>
       </nav>
     </div>
 
@@ -112,434 +70,28 @@
       <div class="d-flex row container">
         <div class="col-9 container mt-5" style="margin-bottom: 105px;">
             <div class="col-3"></div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
+            <div id="chat" style="margin-top: 70px;">
+              {% if error %}
+              <div id="toasts">
+                <div class="toast fade show" role="alert" id="toast" aria-live="assertive" aria-atomic="true">
+                  <div class="toast-header">
+                    <strong class="mr-auto">Error:</strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" onclick="deleteToast()" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                  <div class="toast-body">
+                    {{error}}
+                  </div>
+                </div>
               </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
-            </div>
-            <div class="column my-5">
-              <div class="d-flex row justify-content-between mx-1">
-                <h6>user</h6>
-                <span class="text-muted">hh:mm</span>
-              </div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid in, enim facilis necessitatibus minima 
-                corporis magnam quibusdam voluptas sunt aut error aliquam consectetur ipsa! Quasi est autem ducimus doloribus 
-                perspiciatis.
-              </p>
+                <script>
+                  function deleteToast() {
+                    const toasts = document.getElementById('toasts');
+                    toasts.innerHTML = ""
+                  }
+                </script>
+              {% endif %}
             </div>
         </div>
 
@@ -563,5 +115,31 @@
 
 </div>
 
-
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Add A New Channel:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="newChannelForm" action="{{ url_for('addChannel') }}" method="POST">
+          <div class="form-group">
+            <label for="inputText">Channel Name</label>
+            <input type="text" name="channelName" class="form-control" id="inputText1" aria-describedby="textHelp">
+            <small id="textHelp" class="form-text text-muted">Must contain a min. of 3 and a max. of 12 letters.</small>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+        <button type="submit" form="newChannelForm" class="btn btn-success">Add Channel</button>
+      </div>
+    </div>
+  </div>
+</div>
+                  
 {% endblock %}
