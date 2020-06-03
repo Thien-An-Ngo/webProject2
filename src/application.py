@@ -32,14 +32,14 @@ def addChannel():
     channelName = request.form.get('channelName')
     if len(channelName) < 3 or len(channelName) > 12:
         error = "Your channel has to contain a minimum of 3 and a maximum of 12 letters."
-        return redirect('/')
+        return jsonify({"error": error})
     for channel in channels:
         if channelName == channel["channelName"]:
             error = "Channel name is already taken."
-            return redirect('/')
+            return jsonify({"error": error})
     channelCount = len(channels)
     channelElement = {"channelName": f"{channelName}", "id": channelCount}
     channels.append(channelElement)
     messageList = []
     chats.append(messageList)
-    return redirect('/')
+    return jsonify({"error": None})

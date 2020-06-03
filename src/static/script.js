@@ -1,7 +1,3 @@
-const handleClickAddChannel = () => {
-
-}
-
 const handleClickOnChannel = (id) => {
     console.log('click on: ', id);
     const chatroom = document.getElementById('chat');
@@ -65,6 +61,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const username = localStorage.getItem('username');
     const userNameEle = document.querySelectorAll('.username');
     userNameEle[0].innerHTML = username;
-    
-    
+    const addform = document.querySelector('#newChannelForm');
+    console.log('addform: ', addform);
+        addform.addEventListener('onsubmit', (e) => {
+            e.preventDefault();
+            console.log('hurz');
+            return false;
+/*             const request = new XMLHttpRequest;
+            const formData = new FormData(e.target);
+            request.open('POST', '/addChannel')
+            request.onload = () => {
+                const data = JSON.parse(request.responseText);
+                if (data.error) {
+                    const alert = document.querySelector('#channelError');
+                    let div = document.createElement('div');
+                    div.classList.add('alert alert-danger');
+                    div.setAttribute('role', 'alert');
+                    div.innerHTML = data.error;
+                    alert.appendChild(div)
+                }
+            };
+            request.send(formData);
+            return false
+ */        })
 })
