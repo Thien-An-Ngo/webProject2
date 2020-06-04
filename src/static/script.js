@@ -1,3 +1,44 @@
+// to submit the for for a new channel by pressing enter
+function submitByEnter(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if(code == 13) {
+        addChannel();
+    }
+}
+
+// adding the new channel
+function addChannel() {
+    const channelName = document.querySelector('#channelName').value;
+    const request = new XMLHttpRequest();                               // new XMLHttpRequest
+    request.open('POST', '/addChannel');                                // defining the request
+    request.onload = () => {                                            // when the request loads
+        const error = JSON.parse(request.responseText);
+        console.log(error)
+        const channelError = document.getElementById('channelError');
+        if (error.error) {                                              //checking if there was an error
+            channelError.innerHTML = "";
+            let div = document.createElement('div');
+            div.classList.add('alert', 'alert-danger');
+            div.setAttribute('role', 'alert');
+            div.setAttribute('id', 'errorAlert');
+            channelError.append(div);
+            document.querySelector('#errorAlert').innerHTML = error.error;
+        }
+        else {                                                          // if there was no error then operate socket.io
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+            socket.on('connect', () => {
+                socket.emit('newChannel', {'channelName': channelName})
+            })
+            channelError.innerHTML = "";
+        };
+    }
+    const dataForm = new FormData;
+    dataForm.append('channelName', channelName);
+
+    request.send(dataForm);
+    return false;
+}
+
 const handleClickOnChannel = (id) => {
     console.log('click on: ', id);
     const chatroom = document.getElementById('chat');
@@ -8,7 +49,7 @@ const handleClickOnChannel = (id) => {
         const messages = JSON.parse(request.response);
         if (!messages) {
             return chatroom.innerHTML = "";
-        };
+        };    
         console.log(`messages: ${messages}`);
         messages.messages.forEach(message => {
             const content = document.createElement('div');
@@ -28,14 +69,13 @@ const handleClickOnChannel = (id) => {
             text.innerHTML = message.text;
             content.appendChild(text);
             chatroom.appendChild(content);
-        })
-    };
+        })    
+    };    
     request.send();
-}
+}    
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Frage server nach Channel für user
-    // Liste der  Channels durch gehen und darstellen
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
     while (!localStorage.getItem('username')) {
         let username = null;
@@ -61,27 +101,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const username = localStorage.getItem('username');
     const userNameEle = document.querySelectorAll('.username');
     userNameEle[0].innerHTML = username;
-    const addform = document.querySelector('#newChannelForm');
-    console.log('addform: ', addform);
-        addform.addEventListener('onsubmit', (e) => {
-            e.preventDefault();
-            console.log('hurz');
-            return false;
-/*             const request = new XMLHttpRequest;
-            const formData = new FormData(e.target);
-            request.open('POST', '/addChannel')
-            request.onload = () => {
-                const data = JSON.parse(request.responseText);
-                if (data.error) {
-                    const alert = document.querySelector('#channelError');
-                    let div = document.createElement('div');
-                    div.classList.add('alert alert-danger');
-                    div.setAttribute('role', 'alert');
-                    div.innerHTML = data.error;
-                    alert.appendChild(div)
-                }
-            };
-            request.send(formData);
-            return false
- */        })
+
+    socket.on('announce new channel', data => {
+        const channelList = document.querySelector('#channelList');
+        let template = document.querySelector('.template'),
+        span = template.content.querySelector("span"),
+        a = template.content.querySelector("a");
+        a.setAttribute('id', data.id);
+        a.setAttribute('onclick', handleClickOnChannel(data.id));
+        span.innerHTML = data.newChannel;
+        channelList.append(template)
+    })
 })

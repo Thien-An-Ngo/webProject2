@@ -27,7 +27,6 @@ def getChannels():
 
 @app.route("/addChannel", methods=["POST"])
 def addChannel():
-    global error
     error = ""
     channelName = request.form.get('channelName')
     if len(channelName) < 3 or len(channelName) > 12:
@@ -37,9 +36,14 @@ def addChannel():
         if channelName == channel["channelName"]:
             error = "Channel name is already taken."
             return jsonify({"error": error})
+    return jsonify({"error": None})
+
+@socketio.on("newChannel")
+def newChannel(data):
+    channelName = data['channelName']
     channelCount = len(channels)
     channelElement = {"channelName": f"{channelName}", "id": channelCount}
     channels.append(channelElement)
     messageList = []
     chats.append(messageList)
-    return jsonify({"error": None})
+    emit("announce new channel", {"newChannel": channelName, "id": channelCount}, broadcast=True)
