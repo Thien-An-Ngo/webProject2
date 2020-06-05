@@ -29,6 +29,10 @@ ul{
     background-color: #003333;
 }
 
+.bg-message {
+    background-color: #642EFE;
+}
+
 .nav-fonts-0 {
     color: #FFE4B5;
 }
@@ -41,9 +45,21 @@ ul{
     height: 100%;
 }
 
-.full1 {
-    width: 97%;
+@media (max-width:1200px) {
+    .full1 {
+        width: 98.25%;
+    }
 }
+
+@media (min-width:1200px) {
+    .full1 {
+        width: 98.6%;
+    }
+}
+
+/* .input-width {
+    width: 80%;
+} */
 
 .channel:hover {
     color: #E91E63;
@@ -52,5 +68,9 @@ ul{
 
 .hover1:hover {
     color: #E6E6FA;
-    font-size: 150%;
+    font-size: 110%;
+}
+
+@media only screen and (min-width: 768px) {
+    .channelDrop {display: none;}
 }

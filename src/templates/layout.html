@@ -12,6 +12,7 @@
 <body>
     {% block body %}
     {% endblock %}
+    <script src="{{ url_for('static', filename='socket.io/socket.io.js') }}"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap-4.5.0-dist/js/jquery/jquery-3.4.1.slim.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap-4.5.0-dist/js/popper/popper.min.js') }}"></script>

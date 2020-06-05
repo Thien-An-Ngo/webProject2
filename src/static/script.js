@@ -30,7 +30,13 @@ function addChannel() {
                 socket.emit('newChannel', {'channelName': channelName})
             })
             channelError.innerHTML = "";
-        };
+            const body = document.querySelector('body');
+            const lastDiv = document.querySelector('.modal-backdrop');
+            body.removeAttribute('class');
+            body.removeChild(lastDiv);
+            document.querySelector('.modal').removeAttribute('style', 'aria-modal');
+            document.querySelector('.modal').classList.remove('show')
+        }
     }
     const dataForm = new FormData;
     dataForm.append('channelName', channelName);
@@ -39,44 +45,7 @@ function addChannel() {
     return false;
 }
 
-const handleClickOnChannel = (id) => {
-    console.log('click on: ', id);
-    const chatroom = document.getElementById('chat');
-    chatroom.innerHTML = ""
-    const request = new XMLHttpRequest();
-    request.open('GET', `/messages/${id}`);
-    request.onload = () => {
-        const messages = JSON.parse(request.response);
-        if (!messages) {
-            return chatroom.innerHTML = "";
-        };    
-        console.log(`messages: ${messages}`);
-        messages.messages.forEach(message => {
-            const content = document.createElement('div');
-            content.classList.add('column' + 'my-5');
-            let info = document.createElement('div');
-            info.classList.add('d-flex' + 'row' + 'justify-content-between' + 'mx-1');
-            let user = document.createElement('h6');
-            let time = document.createElement('span');
-            time.classList.add('text-muted');
-            user.innerHTML = message.user;
-            time.innerHTML = message.time;
-            info.appendChild(user);
-            info.appendChild(time);
-            content.appendChild(info);
-
-            let text = document.createElement('p');
-            text.innerHTML = message.text;
-            content.appendChild(text);
-            chatroom.appendChild(content);
-        })    
-    };    
-    request.send();
-}    
-
-document.addEventListener('DOMContentLoaded', () => {
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
-
+function newUsername() {
     while (!localStorage.getItem('username')) {
         let username = null;
         while (!username) { // warte so lange bis was eingegeben wird
@@ -97,19 +66,135 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('username', username);
         };
     };
-
+    
     const username = localStorage.getItem('username');
     const userNameEle = document.querySelectorAll('.username');
     userNameEle[0].innerHTML = username;
+}
 
-    socket.on('announce new channel', data => {
-        const channelList = document.querySelector('#channelList');
+function changeUsername() {
+    localStorage.removeItem('username');
+    newUsername()
+}
+
+const loadMessages = (id) => {
+    console.log('click on: ', id);
+    // id = int(id)
+    localStorage.setItem('currentChannelID', id);
+    document.queryCommandEnabled('#chat').innerHTML = ""
+    const request = new XMLHttpRequest();
+    request.open('GET', `/messages/${id}`);
+    request.onload = () => {
+    const messages = JSON.parse(request.response);
+    console.log(messages)
+        if (!messages) {
+            console.log("no messages")
+            return chatroom.innerHTML = "";
+        }
+        else {
+            messages.forEach(message => {
+                buildMessage(message.user, message.time, message.text)
+                console.log("message information sent")
+            });
+        };
+        console.log(`messages: ${messages}`);
+        console.log(typeof(messages))
+    };
+    request.send();
+}
+
+function buildMessage(user, time, content) {
+    console.log(`enter building module of message ${user}, ${time}, ${content}`)
+    const messageTemp = document.querySelector('#messageTemp'),
+    userCon = messageTemp.content.querySelector('h6'),
+    timeCon = messageTemp.content.querySelector('span'),
+    contentCon = messageTemp.content.querySelector('p');
+
+    userCon.innerHTML = user;
+    timeCon.innerHTML = time;
+    contentCon.innerHTML = content;
+
+    let clone = document.importNode(messageTemp.content, true);
+    document.querySelector('#chat').append(clone)
+
+    userCon.innerHTML = "";
+    timeCon.innerHTML = "";
+    contentCon.innerHTML = "";
+}
+
+function sendMessage() {
+    console.log("entering sending process")
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    let text = document.querySelector('#mText').value,
+    date = new Date(),
+    h = date.getHours(),
+    min = date.getMinutes(),
+    time = `${h}:${min}`,
+    username = localStorage.getItem('username'),
+    channelID = localStorage.getItem('currentChannelID');
+    
+    console.log(`recorded all necessary data ${channelID}, ${username}, ${time}, ${text}`)
+    socket.on('connect', () => {
+        socket.emit('newMessage', {"channelID": channelID, "user": username, "time": time, "text": text})
+        console.log("emit sucessful")
+    })
+}
+
+// wehn DOM finished loading
+document.addEventListener('DOMContentLoaded', () => {
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+    newUsername();
+
+    if (!localStorage.getItem('currentChannelID')) {
+        localStorage.setItem('currentChannelID', 0);
+    }
+
+    loadMessages(localStorage.getItem('currentChannelID'))
+
+    socket.on('announceNewChannel', data => {
+        console.log(data)
+        const channelListSB = document.querySelector('#channelListSB'),
+        channelListDD = document.querySelector('#channelListDD');
         let template = document.querySelector('.template'),
         span = template.content.querySelector("span"),
-        a = template.content.querySelector("a");
+        a = template.content.querySelector("a"),
+        t = document.querySelector('#temp'),
+        ts = t.content.querySelector("span"),
+        ta = t.content.querySelector("a");
+
+        a.removeAttribute('id');
+        a.removeAttribute('onclick');
+        span.innerHTML = "";
+        ta.removeAttribute('id');
+        ta.removeAttribute('onclick');
+        ts.innerHTML = "";
+
+        console.log("template in process")
         a.setAttribute('id', data.id);
-        a.setAttribute('onclick', handleClickOnChannel(data.id));
+        a.setAttribute('onclick', loadMessages(data.id));
         span.innerHTML = data.newChannel;
-        channelList.append(template)
+        ta.setAttribute('id', data.id);
+        ta.setAttribute('onclick', loadMessages(data.id));
+        ts.innerHTML = data.newChannel;
+
+        let clone = document.importNode(template.content, true);
+        let clone1 = document.importNode(t.content, true);
+
+        channelListSB.append(clone);
+        channelListDD.append(clone1)
     })
+
+
+    socket.on('ADD_NEW_MESSAGE', data => {
+        console.log(`emit received ${data}`)
+        if (data.channelID===localStorage.getItem('currentChannelID')) {
+            buildMessage(data.user, data.time, data.text)
+        }
+        else {
+            return
+        }
+    })
+
+
 })

@@ -7,8 +7,8 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-channels = []
-chats = []
+channels = [{"channelName": "general", "id": 0}]
+chats = [[]]
 global channelCount
 error = ""
 channelCount = 0
@@ -19,7 +19,10 @@ def index():
 
 @app.route("/messages/<int:id>")
 def messages(id):
-    return jsonify({"messages": chats[id]})
+    index = int(id)
+    if not chats[index]:
+        return jsonify({"messages": None})
+    return jsonify({"messages": chats[index]})
 
 @app.route("/channels")
 def getChannels():
@@ -42,8 +45,22 @@ def addChannel():
 def newChannel(data):
     channelName = data['channelName']
     channelCount = len(channels)
-    channelElement = {"channelName": f"{channelName}", "id": channelCount}
+    channelElement = {"channelName": f"{channelName}", "id": int(channelCount)}
     channels.append(channelElement)
     messageList = []
     chats.append(messageList)
-    emit("announce new channel", {"newChannel": channelName, "id": channelCount}, broadcast=True)
+    emit("announceNewChannel", {"newChannel": channelName, "id": int(channelCount)}, broadcast=True)
+
+@socketio.on("newMessage")
+def newMessage(data):
+    print("new message received in back-end")
+    print(data)
+    index = int(data["channelID"])
+    print(chats[index])
+    chats[index].append({
+        "user": data["user"],
+        "time": data["time"],
+        "text": data["text"]
+        })
+    print(f"appended new message {chats}")
+    emit("ADD_NEW_MESSAGE", {"channelID": str(index),"user": data["user"],"time": data["time"],"text": data["text"]}, broadcast=True)
