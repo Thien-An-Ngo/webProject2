@@ -77,28 +77,37 @@ function changeUsername() {
     newUsername()
 }
 
-const loadMessages = (id) => {
-    console.log('click on: ', id);
-    // id = int(id)
+const loadMessages = (channel) => {
+    const {id, channelName} = channel;
+    console.log('click on: ', id, ' channelName: ', channelName);
+    
+    document.querySelector('#currentChannelName'). innerHTML = "";
     localStorage.setItem('currentChannelID', id);
-    document.queryCommandEnabled('#chat').innerHTML = ""
+    localStorage.setItem('currentChannelName', channelName)
+
+    document.querySelector('#currentChannelName').innerHTML = channelName
+    document.querySelector('#chat').innerHTML = "";
+    document.querySelectorAll('.chnnl').forEach(channel => {
+        channel.classList.remove('selectedChannel')
+    })
+    document.querySelector(`#channel-${id}`).classList.add('selectedChannel')
     const request = new XMLHttpRequest();
     request.open('GET', `/messages/${id}`);
     request.onload = () => {
     const messages = JSON.parse(request.response);
     console.log(messages)
-        if (!messages) {
+        if (!messages.messages) {
             console.log("no messages")
-            return chatroom.innerHTML = "";
+            return document.querySelector('#chat').innerHTML = "";
         }
         else {
-            messages.forEach(message => {
+            messages.messages.forEach(message => {
                 buildMessage(message.user, message.time, message.text)
                 console.log("message information sent")
             });
         };
-        console.log(`messages: ${messages}`);
-        console.log(typeof(messages))
+        console.log(`messages: ${messages.messages}`);
+        console.log(typeof(messages.messages))
     };
     request.send();
 }
@@ -106,7 +115,8 @@ const loadMessages = (id) => {
 function buildMessage(user, time, content) {
     console.log(`enter building module of message ${user}, ${time}, ${content}`)
     const messageTemp = document.querySelector('#messageTemp'),
-    userCon = messageTemp.content.querySelector('h6'),
+    mCon = messageTemp.content.querySelector('div'),
+    userCon = messageTemp.content.querySelector('h5'),
     timeCon = messageTemp.content.querySelector('span'),
     contentCon = messageTemp.content.querySelector('p');
 
@@ -114,8 +124,18 @@ function buildMessage(user, time, content) {
     timeCon.innerHTML = time;
     contentCon.innerHTML = content;
 
+    if (user === localStorage.getItem('username')) {
+        mCon.classList.remove('float-left');
+        mCon.classList.add('float-right')
+    }
+
     let clone = document.importNode(messageTemp.content, true);
     document.querySelector('#chat').append(clone)
+    
+    if (user === localStorage.getItem('username')) {
+        mCon.classList.remove('float-right');
+        mCon.classList.add('float-left')
+    }
 
     userCon.innerHTML = "";
     timeCon.innerHTML = "";
@@ -132,14 +152,22 @@ function sendMessage() {
     time = `${h}:${min}`,
     username = localStorage.getItem('username'),
     channelID = localStorage.getItem('currentChannelID');
+
+    if (text.trim().length === 0) {
+        document.querySelector('#mText').value = "";
+        console.log("no real text!")
+        return
+    }
     
     console.log(`recorded all necessary data ${channelID}, ${username}, ${time}, ${text}`)
     socket.on('connect', () => {
         socket.emit('newMessage', {"channelID": channelID, "user": username, "time": time, "text": text})
         console.log("emit sucessful")
     })
+    document.querySelector('#mText').value = "";
 }
 
+const currentChannelName = 'currentChannelName';
 // wehn DOM finished loading
 document.addEventListener('DOMContentLoaded', () => {
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -150,7 +178,13 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('currentChannelID', 0);
     }
 
-    loadMessages(localStorage.getItem('currentChannelID'))
+    console.log('currentChannelName: ', localStorage.getItem('currentChannelName'));
+    if (!localStorage.getItem('currentChannelName') || localStorage.getItem('currentChannelName') == null) {
+        localStorage.setItem('currentChannelName', "general");
+        console.log('setze: ', localStorage.getItem('currentChannelName'));
+    }
+    console.log('loadMessages: ', localStorage.getItem('currentChannelName'));
+    loadMessages({id: localStorage.getItem('currentChannelID'), channelName: localStorage.getItem('currentChannelName')})
 
     socket.on('announceNewChannel', data => {
         console.log(data)
@@ -161,7 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
         a = template.content.querySelector("a"),
         t = document.querySelector('#temp'),
         ts = t.content.querySelector("span"),
-        ta = t.content.querySelector("a");
+        ta = t.content.querySelector("a"),
+        lM = loadMessages(data);
 
         a.removeAttribute('id');
         a.removeAttribute('onclick');
@@ -172,10 +207,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log("template in process")
         a.setAttribute('id', data.id);
-        a.setAttribute('onclick', loadMessages(data.id));
+        a.setAttribute('onclick', lM);
         span.innerHTML = data.newChannel;
         ta.setAttribute('id', data.id);
-        ta.setAttribute('onclick', loadMessages(data.id));
+        ta.setAttribute('onclick', lM);
         ts.innerHTML = data.newChannel;
 
         let clone = document.importNode(template.content, true);

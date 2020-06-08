@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="d-flex row m-0 full">
+<div class="d-flex m-0 full">
   <!-- The navbar on top -->
   <nav class="navbar fixed-top navbar-light bg-c" style="justify-content: flex-start;">
     <a class="nav-link active p-0 col-4 col-md-3 col-xl-2" href="#" onclick="changeUsername()">
@@ -23,7 +23,7 @@
     </a>
     <div class="d-flex row col-8 col-md-9 col-xl-10 justify-content-between pr-0">
       <!-- current channel name -->
-      <h1 class="navbar-brand text-light p-0 m-0" style="vertical-align: middle;">Channel</h1>
+      <h1 class="navbar-brand text-light p-0 m-0" id="currentChannelName" style="vertical-align: middle;"></h1>
       <!--  -->
       <div class="dropdown channelDrop">
         <button class="btn bg-c dropdown-toggle hover1 nav-fonts-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -33,7 +33,7 @@
           <div id="channelListDD">
           {% if channels %}
             {% for channel in channels %}
-            <a class="dropdown-item" id="{{channel.id}}" href="#" onclick="loadMessages('{{channel.id}}')">
+            <a class="dropdown-item chnnl" id="{{channel.id}}" href="#" onclick="loadMessages({{channel}})">
               <svg class="bi bi-window" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" 
               xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 4px;">
                 <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 
@@ -59,9 +59,9 @@
     </div>
   </nav>
 
-  <div class="d-flex row justify-content-between full1">
+  <div class="d-flex justify-content-between full2" style="background-color:#B2DFDB;">
 
-    <div class="col-md-3 col-xl-2">
+    <div class="col-md-3 col-xl-2 pl-0">
       <!-- sidebar -->
       <nav id="sidebarMenu" class="position-fixed col-md-3 col-xl-2 d-md-block background-color sidebar collapse pt-3 full mt-4">
         <div class="sidebar-sticky pt-3">
@@ -88,7 +88,7 @@
             {% if channels %}
             {% for channel in channels %}
               <li class="nav-item selected">
-                <a class="nav-link nav-fonts-1 channel" id="{{channel.id}}" href="#" onclick="loadMessages('{{channel.id}}')">
+                <a class="nav-link nav-fonts-1 channel chnnl" id="channel-{{channel.id}}" href="#" onclick="loadMessages({{channel}})">
                   <svg class="bi bi-window" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" 
                   xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 4px;">
                     <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 
@@ -107,8 +107,8 @@
     </div>
 
     <div class="col-12 col-md-9 col-xl-10 justify-content-end">
-      <div class="d-flex row container">
-        <div class="col-9 container mt-5" style="margin-bottom: 105px;">
+      <div class="d-flex row">
+        <div class="container mt-5 mx-0" style="margin-bottom: 105px;">
           <div class="col-3"></div>
           <!-- chatroom element -->
           <div id="chat" style="margin-top: 70px;"><!-- messages --></div>
@@ -168,7 +168,7 @@
 <!-- channel list element template -->
 <template class="template">
   <li class="nav-item selected">
-    <a class="nav-link nav-fonts-1 channel" href="#" onclick="" id="">
+    <a class="nav-link nav-fonts-1 channel chnnl" href="#" onclick="" id="">
       <svg class="bi bi-window" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" 
       xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 4px;">
         <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 
@@ -182,7 +182,7 @@
 </template>
 
 <template id="temp">
-  <a class="dropdown-item" id="" href="#" onclick="">
+  <a class="dropdown-item chnnl" id="" href="#" onclick="">
     <svg class="bi bi-window" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" 
     xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 4px;">
       <path fill-rule="evenodd" d="M14 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 
@@ -195,12 +195,12 @@
 </template>
 
 <template id="messageTemp">
-  <div class="column my-5">
-    <div class="d-flex row justify-content-between mx-1">
-      <h6 class="mb-0" style="margin-top: 5px;"></h6>
+  <div class="column my-3 p-1 float-left" style="width: 70%; background-color: #E0F7FA;">
+    <div class="d-flex row justify-content-between mr-2" style="margin-left: 0px;">
+      <h5 class="mb-0" style="margin-top: 5px;"></h5>
       <span class="text-muted"></span>
     </div>
-    <p></p>
+    <p style="color: #5D6D7E;"></p>
   </div>
 </template>
 
